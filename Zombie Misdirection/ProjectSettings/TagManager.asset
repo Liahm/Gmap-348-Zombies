@@ -8,6 +8,7 @@ TagManager:
   - Human
   - Scientist
   - Zombie
+  - End
   layers:
   - Default
   - TransparentFX
@@ -18,8 +19,8 @@ TagManager:
   - 
   - 
   - PostProcessing
-  - 
-  - 
+  - Ground
+  - No Lights
   - 
   - 
   - 

@@ -10,15 +10,20 @@ public class Hazards : MonoBehaviour
 	public bool VERBOSE = false;
 
 //---------------------------------------------------------------------------FIELDS:
-	
+	public float Delay;
 //---------------------------------------------------------------------MONO METHODS:
 
 	void OnTriggerEnter(Collider col)
 	{
-		///<TODO>
-		/// If this object (hazard) touches scientiest. Gameover.!--
-		/// Else if it touches zombie/other entities, "destroy" them
-		///</TODO>
+		if(col.tag == "Scientist")
+		{
+			FlockZombie.Instance.Defeat();
+		}
+		else if (col.tag == "Human")
+		{
+			//Put a "dead animation/stuff"
+			Destroy(col.gameObject, Delay);
+		}
 	}
 
 //--------------------------------------------------------------------------METHODS:

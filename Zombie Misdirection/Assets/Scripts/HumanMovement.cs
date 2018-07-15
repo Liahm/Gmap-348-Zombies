@@ -1,28 +1,30 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-public class ScientistMovement : MonoBehaviour 
+using UnityEngine.AI;
+public class HumanMovement : MonoBehaviour 
 {
 //------------------------------------------------------------------------CONSTANTS:
 
-	private const string LOG_TAG = "ScientistMovement";
+	private const string LOG_TAG = "HumanMovement";
 	public bool VERBOSE = false;
 
 //---------------------------------------------------------------------------FIELDS:
-	///<TODO>
-	/// In update, update the transforms to reach the end using navmesh.
-	/// What else does the scientiest do?
-	///</TODO>
+	public float Speed;
+	public GameObject endPos;
+	private NavMeshAgent Agent;
 //---------------------------------------------------------------------MONO METHODS:
 
 	void Start() 
 	{
-
+		Agent = GetComponent<NavMeshAgent>();
+		Agent.destination = endPos.transform.position;
+		Agent.speed = Speed;
 	}
 		
 	void Update()
     {
-
+		Agent.SetDestination(endPos.transform.position);
     }
 
 //--------------------------------------------------------------------------METHODS:
