@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Hazards : MonoBehaviour 
+public class AutoDestroy : MonoBehaviour 
 {
 //------------------------------------------------------------------------CONSTANTS:
 
@@ -10,21 +10,18 @@ public class Hazards : MonoBehaviour
 	public bool VERBOSE = false;
 
 //---------------------------------------------------------------------------FIELDS:
-	public float Delay;
+	public float Speed;
 //---------------------------------------------------------------------MONO METHODS:
 
-	void OnTriggerEnter(Collider col)
+	// Use this for initialization
+	void Start () {
+		
+	}
+	
+	// Update is called once per frame
+	void Update () 
 	{
-		if(col.tag == "Scientist")
-		{
-			FlockZombie.Instance.Defeat();
-		}
-		else if (col.tag == "Human")
-		{
-			//Put a "dead animation/stuff"
-			GetComponent<BoxCollider>().enabled = false;
-			Destroy(col.gameObject, Delay);
-		}
+		transform.position = Vector3.MoveTowards(transform.position, new Vector3(transform.position.x, transform.position.y, transform.position.z - 5), Speed * Time.deltaTime);
 	}
 
 //--------------------------------------------------------------------------METHODS:

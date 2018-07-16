@@ -73,7 +73,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1321841340294992}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.98, y: 1.67, z: -0.42000008}
+  m_LocalPosition: {x: -7.89, y: 1.67, z: -0.42000008}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4301695602617762}
@@ -218,20 +218,23 @@ MonoBehaviour:
   VERBOSE: 0
   WaitTimer: 2
   child: {fileID: 1510856682794110}
+  Parent: {fileID: 1911794443564478, guid: 36a7d3c542c4ec54288866dd33d13e97, type: 2}
 --- !u!114 &114605578292796160
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1321841340294992}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8ceb38c1883787d4ea74587355890f9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   VERBOSE: 0
   Speed: 1
-  endPos: {fileID: 0}
+  EndPos: {fileID: 1306269736707124, guid: d4da20c826cfb2b42908e61a93e65934, type: 2}
+  AlertBubble: {fileID: 1958110158695592, guid: 6d377a612c391cc47860d6c4ad323636,
+    type: 2}
 --- !u!136 &136646566961368422
 CapsuleCollider:
   m_ObjectHideFlags: 1

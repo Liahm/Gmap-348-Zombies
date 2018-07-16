@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.AI;
+using UnityEngine.UI; 
 
 public class FlockZombie : MyUtility.Singleton<FlockZombie>
 {
@@ -23,25 +24,36 @@ public class FlockZombie : MyUtility.Singleton<FlockZombie>
 
 	public float Speed, MinOffset, MaxOffset, MaxDistance, MovementFrequency;
 	[Space(25)]
-	public int Hunger; 
+	public float Hunger;
+	public float Satiation; 
+	public GameObject HungerBar;
+	public Slider bar;
+	public GameObject HumanGroup;
 	public int ReleasePercentage;
+	
 	[System.NonSerialized]
-	public bool Moving, Regroup;
+	public bool Moving, Regroup, SingleChase;
 	[System.NonSerialized]
 	public Vector3 WordPos;
+	[System.NonSerialized]
+	public GameObject HungerTarget;
 
 	private GameObject FlockCenter, p;
 	private Transform endPos;
 	private int childrenNumber, releasedNumber;
 	private Ray ray;
 	private LayerMask ground;
+	private Image Fill;
 
 	
 //---------------------------------------------------------------------MONO METHODS:
 
 	void Start () 
 	{
+		Fill = HungerBar.transform.Find("Fill Area").Find("Fill").GetComponent<Image>();
 		FlockCenter = this.gameObject;
+		bar.value = Hunger;
+		bar.maxValue = Hunger;
 		if(VERBOSE) p = GameObject.FindGameObjectWithTag("Hazard");
 		ground = 1 << 9;
 	}
@@ -49,6 +61,7 @@ public class FlockZombie : MyUtility.Singleton<FlockZombie>
 	// Update is called once per frame
 	void Update () 
 	{
+		HungerMeter();
 		if(Input.GetKeyDown(KeyCode.Mouse0))
 		{
 			Vector3 mousePos=new Vector3(Input.mousePosition.x, Input.mousePosition.y, 0f);
@@ -80,7 +93,9 @@ public class FlockZombie : MyUtility.Singleton<FlockZombie>
 		}
 		if(Input.GetKeyDown(KeyCode.W) && transform.childCount > 1)
 		{
+			Moving = false;
 			Drop();
+			Moving = true;
 		}
 
 		if(Moving)
@@ -92,12 +107,57 @@ public class FlockZombie : MyUtility.Singleton<FlockZombie>
 
 //--------------------------------------------------------------------------METHODS:
 	
-
+	public void ChangeSliderColor()
+	{
+		if(Hunger <= 0)
+		{
+			Fill.color = Color.red;
+		}
+		else
+			Fill.color = Color.yellow;
+	}
 	public void Defeat()
 	{
 		SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
 	}
 
+	public void HungerMeter()
+	{
+		Hunger -= 1 * Time.deltaTime;
+		bar.value = Hunger;
+		if(Hunger < 0)
+		{
+			Hunger = 0;
+			if(!SingleChase)
+			{
+				Drop();
+				float[] DistanceBetween = new float[HumanGroup.transform.childCount];
+				int i = 0;
+				float min = Vector3.Distance(FlockCenter.transform.position, HumanGroup.transform.position);
+				HumanMovement[] movement = FindObjectsOfType<HumanMovement>();
+				Debug.Log(movement[0].name);
+				foreach(HumanMovement human in movement)
+				{
+					if(human.transform.tag == "Zombie")
+					{
+						continue;
+					}	
+						
+					DistanceBetween[i] = Vector3.Distance(FlockCenter.transform.position, human.transform.position);
+					if(DistanceBetween[i] < min && human.transform.tag != "Zombie")
+					{
+						min = DistanceBetween[i];
+						HungerTarget = human.gameObject;
+					}
+					else
+					{
+						HungerTarget = GameObject.FindGameObjectWithTag("Scientist");
+					}
+				}
+				SingleChase = true;
+			}
+		}
+	}
 	public float RandomOffset()
 	{
 		return Random.Range(MinOffset, MaxOffset);
@@ -119,33 +179,6 @@ public class FlockZombie : MyUtility.Singleton<FlockZombie>
 		}
 		
 	}
-	///<Summary>
-	///Randomly walks around a small amount (40% of the offsets)
-	///If they leave the radius of their parent, then walk back
-	///		If they are closer to the target, slow them, otherwise increase speed
-	///</Summary>
-	public void SwayAround(NavMeshAgent Agent, Transform EndPoint,float SpeedDifference)
-	{
-		Vector3 offset = new Vector3((RandomOffset()*40)/100,(RandomOffset()*40)/100,0);
-
-		if(Vector3.Distance(transform.position, 
-			transform.parent.transform.position) >= MaxDistance)
-		{
-			if(Vector3.Distance(transform.position, EndPoint.position) <= 
-			Vector3.Distance(transform.position, EndPoint.position) + 
-			Vector3.Distance(transform.position, transform.parent.transform.position))
-			{
-				Agent.speed = Speed - SpeedDifference;
-			}
-			else if(Vector3.Distance(transform.position, EndPoint.position) >= 
-			Vector3.Distance(transform.position, EndPoint.position) + 
-			Vector3.Distance(transform.position, transform.parent.transform.position))
-			{
-				Agent.speed = Speed + SpeedDifference;
-			}
-		}
-		Agent.Move(offset);
-	}
 
 	
 
@@ -153,6 +186,7 @@ public class FlockZombie : MyUtility.Singleton<FlockZombie>
 
 	private void Drop()
 	{
+		if(VERBOSE)		Debug.Log("DROPPING");
 		int processed = 0;
 		releasedNumber = (transform.childCount * ReleasePercentage) / 100;
 		foreach(Transform child in transform)
@@ -170,4 +204,5 @@ public class FlockZombie : MyUtility.Singleton<FlockZombie>
 			Moving = false;
 		}
 	}
+
 }

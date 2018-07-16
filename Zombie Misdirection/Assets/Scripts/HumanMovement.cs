@@ -11,24 +11,61 @@ public class HumanMovement : MonoBehaviour
 
 //---------------------------------------------------------------------------FIELDS:
 	public float Speed;
-	public GameObject endPos;
+	public GameObject EndPos, AlertBubble;
 	private NavMeshAgent Agent;
+	private bool runAway, stopRunning;
+	private Collider collision;
 //---------------------------------------------------------------------MONO METHODS:
 
+	void OnTriggerEnter(Collider col)
+	{
+		if(col.gameObject.tag == "RunAway")
+		{
+			collision = col;
+			stopRunning = false;
+			runAway = true;
+		}
+	}
+
+	void OnTriggerExit()
+	{
+		stopRunning = true;
+		Agent.speed = Speed;
+	}
 	void Start() 
 	{
 		Agent = GetComponent<NavMeshAgent>();
-		Agent.destination = endPos.transform.position;
+		Agent.destination = EndPos.transform.position;
 		Agent.speed = Speed;
+		stopRunning = true;
+		runAway = false;
 	}
 		
 	void Update()
     {
-		Agent.SetDestination(endPos.transform.position);
+		if(runAway)
+		{
+			runAwayFromThisSpot(collision);
+			if(stopRunning)
+				runAway = false;
+		}
+		else
+			Agent.SetDestination(EndPos.transform.position);
     }
 
 //--------------------------------------------------------------------------METHODS:
-
+	public void SpawnBubble()
+	{
+		Instantiate(AlertBubble, transform.position, transform.rotation);
+	}
 //--------------------------------------------------------------------------HELPERS:
-	
+
+	private void runAwayFromThisSpot(Collider coll)
+	{
+		Debug.Log("RUN");
+		Agent.speed = 1.5f;
+		Vector3 direction = transform.position - coll.gameObject.transform.position;
+		Agent.SetDestination(direction);
+	}
+
 }

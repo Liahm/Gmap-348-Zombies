@@ -12,7 +12,7 @@ public class IndividualZombie : MonoBehaviour
 
 //---------------------------------------------------------------------------FIELDS:
 	public float WaitTimer;
-	public GameObject child;
+	public GameObject child, Parent;
 
 	[System.NonSerialized]
 	public bool Alert, Dropped;
@@ -29,7 +29,7 @@ public class IndividualZombie : MonoBehaviour
 	void Start()
 	{
 		individualMove = false;
-		parent = transform.parent;
+		parent = Parent.transform;
 		individualSpeed = FlockZombie.Instance.Speed;
 		frequency = FlockZombie.Instance.MovementFrequency;
 		pos1 = FlockZombie.Instance.RandomOffset();
@@ -59,6 +59,7 @@ public class IndividualZombie : MonoBehaviour
 				//Deactive RandomMovement script
 				col.gameObject.GetComponent<RandomMovement>().enabled = false;
 				col.gameObject.GetComponent<NavMeshAgent>().enabled = false;
+				col.gameObject.GetComponent<HumanMovement>().SpawnBubble();
 				col.gameObject.GetComponent<HumanMovement>().enabled = false;
 				col.transform.parent = null;
 
@@ -80,21 +81,33 @@ public class IndividualZombie : MonoBehaviour
 	{
 		frequency -= Time.deltaTime;
 
-		if(FlockZombie.Instance.Regroup && !Dropped)
+		if(FlockZombie.Instance.Hunger > 0)
 		{
-			if(Input.GetKeyUp(KeyCode.Q))
+			if(FlockZombie.Instance.Regroup && !Dropped)
 			{
-				pos1 = FlockZombie.Instance.RandomOffset();
-				pos2 = FlockZombie.Instance.RandomOffset();
+				if(Input.GetKeyUp(KeyCode.Q))
+				{
+					pos1 = FlockZombie.Instance.RandomOffset();
+					pos2 = FlockZombie.Instance.RandomOffset();
+					transform.parent = parent;
+				}
+				FlockZombie.Instance.ReturnToCenter(transform, 
+					new Vector3(pos1, pos2, 0), parent);
 			}
-			FlockZombie.Instance.ReturnToCenter(transform, 
-				new Vector3(pos1, pos2, 0), parent);
-			transform.parent = parent;
 		}
+		else if(FlockZombie.Instance.SingleChase)
+		{
+			if(transform.parent != parent)
+			{
+				transform.position = Vector3.MoveTowards(transform.position, 
+					FlockZombie.Instance.HungerTarget.transform.position, individualSpeed * Time.deltaTime);
+			}
+		}
+
 		if(Alert)
 		{
+			if(VERBOSE)	Debug.Log("Alert has been hit");
 			chasing = true;
-			Debug.Log("2- " +coll.name);
 			transform.position = Vector3.MoveTowards(transform.position, coll.transform.position, individualSpeed * Time.deltaTime);						
 		}
 		if(individualMove)
@@ -103,7 +116,7 @@ public class IndividualZombie : MonoBehaviour
 			if(Time.timeSinceLevelLoad >= timer)
 			{
 				if(VERBOSE) Debug.Log("Transformation START!");
-
+				
 				coll.gameObject.tag = "Zombie";
 				coll.transform.parent = parent; 
 				//You might be thinking, why do you have a getcomponent in update?
@@ -116,6 +129,8 @@ public class IndividualZombie : MonoBehaviour
 				//Activate anything else needed.
 				//Teleport to flock.
 				//Yea, having issues with just lerp move to them. I don't have time for that
+				hungerFix();
+
 				coll.transform.position = Vector3.MoveTowards(
 				transform.parent.transform.position, 
 				transform.position + 
@@ -123,13 +138,15 @@ public class IndividualZombie : MonoBehaviour
 								pos2, 
 								0), 
 				FlockZombie.Instance.Speed);
-
 				obstacle.enabled = true;
-				FlockZombie.Instance.Moving = true;
+				//FlockZombie.Instance.Moving = true;
+				FlockZombie.Instance.SingleChase = false;
 				box.enabled = false;
+				coll.GetComponent<BoxCollider>().enabled = false;
 				sphere.enabled = true;
+				coll.GetComponent<CapsuleCollider>().enabled = true;
+				chasing = false;
 				individualMove = false;
-
 			}
 		}
 		
@@ -170,4 +187,11 @@ public class IndividualZombie : MonoBehaviour
 	}
 //--------------------------------------------------------------------------HELPERS:
 	
+	private void hungerFix()
+	{
+		transform.parent = parent;
+		FlockZombie.Instance.Hunger += FlockZombie.Instance.Satiation;
+		FlockZombie.Instance.ReturnToCenter(transform, 
+					new Vector3(pos1, pos2, 0), parent);
+	}
 }

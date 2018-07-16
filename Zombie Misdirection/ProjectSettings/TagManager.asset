@@ -9,6 +9,8 @@ TagManager:
   - Scientist
   - Zombie
   - End
+  - MasterMind
+  - RunAway
   layers:
   - Default
   - TransparentFX

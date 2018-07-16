@@ -186,6 +186,7 @@ MonoBehaviour:
   VERBOSE: 0
   WaitTimer: 2
   child: {fileID: 1818765562210696}
+  Parent: {fileID: 1911794443564478, guid: 36a7d3c542c4ec54288866dd33d13e97, type: 2}
 --- !u!136 &136657855136646096
 CapsuleCollider:
   m_ObjectHideFlags: 1

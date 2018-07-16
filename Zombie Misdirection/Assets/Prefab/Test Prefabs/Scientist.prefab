@@ -110,6 +110,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   VERBOSE: 0
+  Speed: 1
+  EndPos: {fileID: 1306269736707124, guid: d4da20c826cfb2b42908e61a93e65934, type: 2}
+  AlertBubble: {fileID: 1958110158695592, guid: 6d377a612c391cc47860d6c4ad323636,
+    type: 2}
 --- !u!195 &195558450511806632
 NavMeshAgent:
   m_ObjectHideFlags: 1
