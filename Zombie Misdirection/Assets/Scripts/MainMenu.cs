@@ -51,9 +51,10 @@ public class MainMenu : MonoBehaviour
 	//Main menu UI buttons
 	public void StartGame()
 	{
-		if(SceneManager.GetActiveScene().name == "GameOver")
-		{
-			SceneManager.LoadScene("Tutorial 1");	
+		if(SceneManager.GetActiveScene().name == "GameOver" 
+			|| SceneManager.GetActiveScene().name == "Victory")
+		{	
+			SceneManager.LoadScene("MainMenu");	
 		}
 		else
 			SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);		

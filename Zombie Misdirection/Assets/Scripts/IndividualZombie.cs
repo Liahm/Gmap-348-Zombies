@@ -84,6 +84,7 @@ public class IndividualZombie : MonoBehaviour
 
 		if(FlockZombie.Instance.Hunger > 0)
 		{
+
 			if(FlockZombie.Instance.Regroup && !Dropped)
 			{
 				if(Input.GetKeyUp(KeyCode.Q))
