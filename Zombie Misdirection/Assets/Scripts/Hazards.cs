@@ -15,15 +15,15 @@ public class Hazards : MonoBehaviour
 
 	void OnTriggerEnter(Collider col)
 	{
-		if(col.tag == "Scientist")
-		{
-			FlockZombie.Instance.Defeat();
-		}
-		else if (col.tag == "Human")
+		Debug.Log(col);
+		if (col.tag != "Zombie")
 		{
 			//Put a "dead animation/stuff"
-			GetComponent<BoxCollider>().enabled = false;
 			Destroy(col.gameObject, Delay);
+			if(col.tag == "Scientist")
+			{
+				FlockZombie.Instance.Defeat();
+			}
 		}
 	}
 

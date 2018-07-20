@@ -41,8 +41,9 @@ public class IndividualZombie : MonoBehaviour
 	}
 	void OnTriggerEnter(Collider col)
 	{
-		if(col.tag == "Human" && transform.tag == "Zombie" || 
+		if((col.tag == "Human" && transform.tag == "Zombie" || 
 		col.tag == "Scientist" && transform.tag == "Zombie")
+		&& col.tag != "Hazard")
 		{
 			coll = col;
 			box.enabled = true;
@@ -51,7 +52,7 @@ public class IndividualZombie : MonoBehaviour
 			Alert = true;
 		}
 
-		if(chasing)
+		if(chasing && col.tag != "Hazard")
 		{
 			if(col.gameObject.tag == "Human" && transform.tag == "Zombie")
 			{
@@ -142,9 +143,11 @@ public class IndividualZombie : MonoBehaviour
 				//FlockZombie.Instance.Moving = true;
 				FlockZombie.Instance.SingleChase = false;
 				box.enabled = false;
-				coll.GetComponent<BoxCollider>().enabled = false;
+				if(coll.GetComponent<BoxCollider>() != null)
+					coll.GetComponent<BoxCollider>().enabled = false;
 				sphere.enabled = true;
-				coll.GetComponent<CapsuleCollider>().enabled = true;
+				if (coll.GetComponent<CapsuleCollider>() != null)
+					coll.GetComponent<CapsuleCollider>().enabled = true;
 				chasing = false;
 				individualMove = false;
 			}
