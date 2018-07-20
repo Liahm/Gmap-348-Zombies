@@ -15,7 +15,6 @@ public class Hazards : MonoBehaviour
 
 	void OnTriggerEnter(Collider col)
 	{
-		Debug.Log(col);
 		if (col.tag != "Zombie")
 		{
 			//Put a "dead animation/stuff"

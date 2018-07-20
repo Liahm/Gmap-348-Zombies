@@ -56,6 +56,7 @@ public class FlockZombie : MyUtility.Singleton<FlockZombie>
 		bar.maxValue = Hunger;
 		if(VERBOSE) p = GameObject.FindGameObjectWithTag("Hazard");
 		ground = 1 << 9;
+		WordPos = transform.position;
 	}
 	
 	// Update is called once per frame
@@ -93,6 +94,7 @@ public class FlockZombie : MyUtility.Singleton<FlockZombie>
 		}
 		if(Input.GetKeyDown(KeyCode.W) && transform.childCount > 1)
 		{
+			Debug.Log("omg");
 			Moving = false;
 			Drop();
 			Moving = true;
@@ -189,9 +191,11 @@ public class FlockZombie : MyUtility.Singleton<FlockZombie>
 		if(VERBOSE)		Debug.Log("DROPPING");
 		int processed = 0;
 		releasedNumber = (transform.childCount * ReleasePercentage) / 100;
+		if(releasedNumber < 1 && transform.childCount > 1)	
+			releasedNumber = 1;
 		foreach(Transform child in transform)
 		{
-			if(++processed == releasedNumber)	break;
+			if(processed++ == releasedNumber)	break;
 			child.gameObject.GetComponent<IndividualZombie>().Dropped = true;
 			child.parent = null;
 		}

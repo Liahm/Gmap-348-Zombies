@@ -105,51 +105,56 @@ public class IndividualZombie : MonoBehaviour
 			}
 		}
 
-		if(Alert)
+		if(coll != null)
 		{
-			if(VERBOSE)	Debug.Log("Alert has been hit");
-			chasing = true;
-			transform.position = Vector3.MoveTowards(transform.position, coll.transform.position, individualSpeed * Time.deltaTime);						
-		}
-		if(individualMove)
-		{
-			//Activate IndividualZombie script after x seconds
-			if(Time.timeSinceLevelLoad >= timer)
+			if(Alert && (coll.tag == "Human" || coll.tag == "Scientist"))
 			{
-				if(VERBOSE) Debug.Log("Transformation START!");
-				
-				coll.gameObject.tag = "Zombie";
-				coll.transform.parent = parent; 
-				//You might be thinking, why do you have a getcomponent in update?
-				//Well, this section is literally called once per time it happens
-				//Now you might think, why put it here then?
-				//Well, I need the timer to continue ticking
-				coll.gameObject.GetComponent<IndividualZombie>().enabled = true;
-				coll.gameObject.GetComponent<IndividualZombie>().child.SetActive(true);
-				coll.gameObject.GetComponent<CapsuleCollider>().enabled = true;
-				//Activate anything else needed.
-				//Teleport to flock.
-				//Yea, having issues with just lerp move to them. I don't have time for that
-				hungerFix();
+				Debug.Log("Alert has been hit");
+				chasing = true;
+				transform.position = Vector3.MoveTowards(transform.position, coll.transform.position, individualSpeed * Time.deltaTime);						
+			}
+			if(individualMove)
+			{
+				//Activate IndividualZombie script after x seconds
+				if(Time.timeSinceLevelLoad >= timer)
+				{
+					if(VERBOSE) Debug.Log("Transformation START!");
+					Alert = false;
+					coll.gameObject.tag = "Zombie";
+					coll.transform.parent = parent; 
+					//You might be thinking, why do you have a getcomponent in update?
+					//Well, this section is literally called once per time it happens
+					//Now you might think, why put it here then?
+					//Well, I need the timer to continue ticking
+					coll.gameObject.GetComponent<IndividualZombie>().enabled = true;
+					coll.gameObject.GetComponent<IndividualZombie>().child.SetActive(true);
+					coll.gameObject.GetComponent<CapsuleCollider>().enabled = true;
+					//Activate anything else needed.
+					//Teleport to flock.
+					//Yea, having issues with just lerp move to them. I don't have time for that
+					hungerFix();
 
-				coll.transform.position = Vector3.MoveTowards(
-				transform.parent.transform.position, 
-				transform.position + 
-					new Vector3(pos1, 
-								pos2, 
-								0), 
-				FlockZombie.Instance.Speed);
-				obstacle.enabled = true;
-				//FlockZombie.Instance.Moving = true;
-				FlockZombie.Instance.SingleChase = false;
-				box.enabled = false;
-				if(coll.GetComponent<BoxCollider>() != null)
-					coll.GetComponent<BoxCollider>().enabled = false;
-				sphere.enabled = true;
-				if (coll.GetComponent<CapsuleCollider>() != null)
-					coll.GetComponent<CapsuleCollider>().enabled = true;
-				chasing = false;
-				individualMove = false;
+					coll.transform.position = Vector3.MoveTowards(
+					transform.parent.transform.position, 
+					transform.position + 
+						new Vector3(pos1, 
+									pos2, 
+									0), 
+					FlockZombie.Instance.Speed);
+					obstacle.enabled = true;
+					//FlockZombie.Instance.Moving = true;
+					FlockZombie.Instance.SingleChase = false;
+					if(box != null)
+						box.enabled = false;
+					if(coll.GetComponent<BoxCollider>() != null)
+						coll.GetComponent<BoxCollider>().enabled = false;
+					if(sphere != null)	
+						sphere.enabled = true;
+					if (coll.GetComponent<CapsuleCollider>() != null)
+						coll.GetComponent<CapsuleCollider>().enabled = true;
+					chasing = false;
+					individualMove = false;
+				}
 			}
 		}
 		
