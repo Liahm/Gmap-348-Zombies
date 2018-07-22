@@ -13,6 +13,9 @@ public class MainMenu : MonoBehaviour
 //---------------------------------------------------------------------------FIELDS:
 
 	public GameObject CanvasObject;
+	public AudioClip ClipMove, ClipSelect;
+
+	private AudioSource soundManager;
 
 	private bool x;
 
@@ -64,6 +67,21 @@ public class MainMenu : MonoBehaviour
 	{
 		Application.Quit();
 	}
+
+	public void MouseEnter() 
+	{
+		Debug.Log("!");
+		soundManager = gameObject.GetComponent<AudioSource>();
+		soundManager.clip = ClipMove;
+        soundManager.Play();
+    }
+ 
+    public void MouseClick() 
+	{
+		Debug.Log("@");
+		soundManager.clip = ClipSelect;
+        soundManager.Play();
+    }  
 //--------------------------------------------------------------------------HELPERS:
 	
 }
