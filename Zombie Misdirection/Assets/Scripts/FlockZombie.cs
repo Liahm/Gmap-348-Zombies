@@ -56,7 +56,7 @@ public class FlockZombie : MyUtility.Singleton<FlockZombie>
 		bar.maxValue = Hunger;
 		if(VERBOSE) p = GameObject.FindGameObjectWithTag("Hazard");
 		ground = 1 << 9;
-		WordPos = transform.position;
+		WordPos = transform.Find("Zombie").transform.position;
 	}
 	
 	// Update is called once per frame
@@ -76,6 +76,7 @@ public class FlockZombie : MyUtility.Singleton<FlockZombie>
 			} else 
 			{
 				WordPos=Camera.main.ScreenToWorldPoint(mousePos);
+				WordPos += new Vector3(0,0, transform.position.z);
 			}
 			if(VERBOSE) Instantiate(p, WordPos, Quaternion.identity);
 		}
@@ -168,7 +169,7 @@ public class FlockZombie : MyUtility.Singleton<FlockZombie>
 	public void ReturnToCenter(Transform target, Vector3 offsetVal, Transform parent)
 	{
 		target.position = Vector3.MoveTowards(target.position, 
-		FlockCenter.transform.position + offsetVal, Speed * Time.deltaTime);
+		WordPos + offsetVal, Speed * Time.deltaTime);
 
 		foreach(IndividualZombie zombie in GameObject.FindObjectsOfType<IndividualZombie>())
 		{
@@ -202,7 +203,7 @@ public class FlockZombie : MyUtility.Singleton<FlockZombie>
 	}
 	private void flockMovement()
 	{
-		transform.position = Vector3.MoveTowards(transform.position, WordPos, Speed * Time.deltaTime);
+		//transform.position = Vector3.MoveTowards(transform.position, WordPos, Speed * Time.deltaTime);
 		if(Vector2.Distance(FlockCenter.transform.position, WordPos) <= 0.005f)
 		{
 			Moving = false;
