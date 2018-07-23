@@ -1185,7 +1185,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   VERBOSE: 0
-  Speed: 1.6
+  Speed: 1.8
   MinOffset: -1.5
   MaxOffset: 1.5
   MaxDistance: 1.5
