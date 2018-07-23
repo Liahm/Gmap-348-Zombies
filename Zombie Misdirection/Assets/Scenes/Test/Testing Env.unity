@@ -1544,12 +1544,12 @@ Prefab:
     - target: {fileID: 224319310111059924, guid: dd9d94a6694372947a75b7dba78902fe,
         type: 2}
       propertyPath: m_SizeDelta.x
-      value: -704
+      value: -1244
       objectReference: {fileID: 0}
     - target: {fileID: 224319310111059924, guid: dd9d94a6694372947a75b7dba78902fe,
         type: 2}
       propertyPath: m_SizeDelta.y
-      value: -400
+      value: -854
       objectReference: {fileID: 0}
     - target: {fileID: 224319310111059924, guid: dd9d94a6694372947a75b7dba78902fe,
         type: 2}
@@ -2104,6 +2104,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   VERBOSE: 0
   CanvasObject: {fileID: 15479750}
+  ClipMove: {fileID: 0}
+  ClipSelect: {fileID: 0}
 --- !u!1001 &2088752209
 Prefab:
   m_ObjectHideFlags: 0
